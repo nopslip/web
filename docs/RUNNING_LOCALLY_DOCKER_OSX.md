@@ -101,9 +101,9 @@ db_1             |          it in "docker run".
 
 TODO - set a local pg password. 
 
-#### Running Gitcoin Web 
+#### Running Gitcoin Web Manually 
 
-At this point you should have the Gitcoin web app up and running locally which you can see by navigating to http://localhost:8000 - It's worth note, that if you're testing on a local machine and doing a lot of browsing to other sites, those sites could access your dev app which often times opens you up to a host of security issues. If you're not actively testing and/or you're visiting untrusted sites, make sure to stop your local app instance or better yet, do your dev work on a seperate machine from where you browse. 
+At this point you should have the Gitcoin web app up and running locally which you can see by navigating to http://localhost:8000 - It's worth note, that if you're testing on a local machine and doing a lot of browsing to other sites, those sites could access your dev app which often times opens you up to a host of security issues. If you're not actively testing and/or you're visiting un-trusted sites, make sure to stop your local app instance or better yet, do your dev work on a separate machine from where you browse. 
 
 After your initial launch of the Gitcoin web app using `docker-compose up --build` you then can use the following command to launch the app and it will launch much more quickly: 
 
@@ -119,11 +119,47 @@ docker ps
 
 This command will show all the containers running. Uou will notice that the `names` column match the different containers in the docker-compose.yaml file in the root of application.  
 
-Back in my terminal that I ran my docker-compose up command in, I see a lot of errors related to chat_1.  As i'm not going to be doing any chat testing, I can remove that app from the docker-compose.yaml file and restart the app. Make sure to back up your docker-compose.yaml file first just in case.  Then stop and start the app again with docker-compose. If you run `docker ps` in your other terminal again you can see that the chat_1 container is no longer running :) 
+While manually running `docker-compose up` works fine, if we want to run the app in the background we can also use this command:
 
-It's also worth note, I did just notice [this guide to setting up chat to run locally](https://github.com/gitcoinco/web/blob/master/docs/RUNNING_CHAT_LOCALLY_DOCKER.md) I suspect would help with the chat errors (like no db found) so if you don't want to kill chat all together you can explore that guide. 
+```
+docker-compose up -d
+```
 
-The next thing you'll want to do is get your Github integration setup and working. This is pretty quick and easy and following the [Github Integration guide here](https://docs.gitcoin.co/mk_third_party_integrations/) will walk you through those steps. 
+As that's running in the background, you will need to use this command to stop the app:
+
+```
+docker-compose down
+```
+#### Running Gitcoin Web from Shell Alias (Recommend)
+However, for what we're going to be hacking on, there is a short cut that Owocki gave me that we can use to quickly run a slimmed down version of the app.  Using the following steps we can get that setup. 
+
+As of OSX 10.6 the ZSH shell is used, so we'll update that file to include a couple nice aliases. 
+
+```
+nano ~/.zshrc 
+```
+Then add the following lines to the file:
+
+```
+# added by <me> for for Gitcoin Web shortcut  
+alias gtc_web='docker-compose down; docker-compose up -d; slimweb'
+alias slimweb='docker stop web_worker_1; docker stop web_testrpc_1; docker stop web_ipfs_1; docker stop web_chat_1;docker stop web_elasticsearch_1'
+```
+
+Then we should reload our ZSH profile and launch the Gitcoin Web app as a deamon in the background (minus some unneeded services) like so:
+```
+source ~/.zshrc
+```
+
+And now we can launch a slimmed down version of Gitcoin Web easily with this command: 
+
+```
+gtc_web
+```
+
+#### First Third Party Integration Setup - Github 
+The next thing you'll want to do is get your Github integration setup and working. This is pretty quick and easy and can be setup by following the [Github Integration guide here](https://docs.gitcoin.co/mk_third_party_integrations/). 
+
 
 
 ### To be continued ... 

@@ -162,6 +162,11 @@ The next thing you'll want to do is get your Github integration setup and workin
 
 
 
-### To be continued ... 
+### Work in progress
+
+TODO - add docker install guide including rootless 
+
+https://docs.docker.com/engine/security/rootless/
+
 
 
